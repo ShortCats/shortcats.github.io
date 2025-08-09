@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Translation Widget</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  margin: 0;
+  background: #f7f7f7;
+}
+select, button {
+  font-size: 1em;
+  padding: 5px;
+  margin: 5px 0;
+}
+</style>
+</head>
+<body>
+<h3>Translate this page</h3>
+<select id="langSelect"></select>
+<button id="translateBtn">Translate</button>
+
+<script>
+// Simple config
+const libreEndpoint = "https://translate.argosopentech.com"; // Public test server
+const pageURL = window.top.location.href; // URL of the page embedding this widget
+
+async function loadLanguages() {
+  const res = await fetch(libreEndpoint + "/languages");
+  const langs = await res.json();
+  const select = document.getElementById("langSelect");
+  langs.forEach(lang => {
+    const opt = document.createElement("option");
+    opt.value = lang.code;
+    opt.textContent = lang.name;
+    select.appendChild(opt);
+  });
+}
+
+document.getElementById("translateBtn").addEventListener("click", () => {
+  const lang = document.getElementById("langSelect").value;
+  window.open(`https://translate.argosopentech.com/?q=${encodeURIComponent(pageURL)}&to=${lang}`, "_blank");
+});
+
+loadLanguages();
+</script>
+</body>
+</html>
